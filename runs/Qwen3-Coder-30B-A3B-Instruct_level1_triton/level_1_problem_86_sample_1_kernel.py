@@ -1,0 +1,302 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import triton
+import triton.language as tl
+import math
+
+@triton.jit
+def depthwise_conv2d_kernel(
+    input_ptr,
+    weight_ptr,
+    output_ptr,
+    batch_size,
+    in_channels,
+    height,
+    width,
+    kernel_h,
+    kernel_w,
+    stride_h,
+    stride_w,
+    padding_h,
+    padding_w,
+    dilation_h,
+    dilation_w,
+    output_h,
+    output_w,
+    BLOCK_SIZE: tl.constexpr,
+    CHANNELS_PER_BLOCK: tl.constexpr
+):
+    # Get thread indices
+    batch_idx = tl.program_id(0)
+    channel_idx = tl.program_id(1)
+    output_y = tl.program_id(2)
+    
+    # Calculate global channel index
+    global_channel_idx = channel_idx * CHANNELS_PER_BLOCK + tl.arange(0, CHANNELS_PER_BLOCK)[:, None, None]
+    
+    # Create masks for valid channels
+    channel_mask = global_channel_idx < in_channels
+    
+    # Initialize accumulator
+    acc = tl.zeros((CHANNELS_PER_BLOCK, 1, 1), dtype=tl.float32)
+    
+    # Loop over kernel elements
+    for kh in range(kernel_h):
+        for kw in range(kernel_w):
+            # Calculate input positions with dilation and padding
+            input_y = output_y * stride_h - padding_h + kh * dilation_h
+            input_x = output_y * stride_w - padding_w + kw * dilation_w
+            
+            # Load input data
+            input_data = tl.load(
+                input_ptr + 
+                batch_idx * (in_channels * height * width) +
+                global_channel_idx * (height * width) +
+                input_y * width + input_x,
+                mask=channel_mask & (input_y >= 0) & (input_x >= 0) & (input_y < height) & (input_x < width),
+                other=0.0
+            )
+            
+            # Load kernel weights
+            weight_data = tl.load(
+                weight_ptr + 
+                global_channel_idx * (kernel_h * kernel_w) +
+                kh * kernel_w + kw,
+                mask=channel_mask,
+                other=0.0
+            )
+            
+            # Accumulate
+            acc += input_data * weight_data[:, None, None]
+    
+    # Store output
+    tl.store(
+        output_ptr + 
+        batch_idx * (in_channels * output_h * output_w) +
+        global_channel_idx * (output_h * output_w) +
+        output_y * output_w,
+        acc,
+        mask=channel_mask
+    )
+
+@triton.jit
+def pointwise_conv2d_kernel(
+    input_ptr,
+    weight_ptr,
+    output_ptr,
+    batch_size,
+    in_channels,
+    out_channels,
+    height,
+    width,
+    output_h,
+    output_w,
+    BLOCK_SIZE: tl.constexpr
+):
+    # Get thread indices
+    batch_idx = tl.program_id(0)
+    out_channel_idx = tl.program_id(1)
+    output_y = tl.program_id(2)
+    
+    # Initialize accumulator
+    acc = tl.zeros((1, 1), dtype=tl.float32)
+    
+    # Loop over input channels
+    for c in range(in_channels):
+        # Load input data
+        input_data = tl.load(
+            input_ptr + 
+            batch_idx * (in_channels * output_h * output_w) +
+            c * (output_h * output_w) +
+            output_y * output_w,
+            mask=(output_y < output_h) & (output_y >= 0),
+            other=0.0
+        )
+        
+        # Load weight
+        weight_data = tl.load(
+            weight_ptr + 
+            out_channel_idx * in_channels +
+            c,
+            mask=(out_channel_idx < out_channels) & (c < in_channels),
+            other=0.0
+        )
+        
+        # Accumulate
+        acc += input_data * weight_data
+    
+    # Store output
+    tl.store(
+        output_ptr + 
+        batch_idx * (out_channels * output_h * output_w) +
+        out_channel_idx * (output_h * output_w) +
+        output_y * output_w,
+        acc,
+        mask=(output_y < output_h) & (out_channel_idx < out_channels)
+    )
+
+def triton_depthwise_conv2d(input_tensor, weight, bias=None, stride=1, padding=0, dilation=1):
+    batch_size, in_channels, height, width = input_tensor.shape
+    kernel_h, kernel_w = weight.shape[2], weight.shape[3]
+    output_h = (height + 2 * padding - (dilation * (kernel_h - 1) + 1)) // stride + 1
+    output_w = (width + 2 * padding - (dilation * (kernel_w - 1) + 1)) // stride + 1
+    
+    # Allocate output tensor
+    output = torch.empty(batch_size, in_channels, output_h, output_w, device=input_tensor.device, dtype=torch.float32)
+    
+    # Configure kernel launch parameters
+    BLOCK_SIZE = 1024
+    CHANNELS_PER_BLOCK = 32
+    
+    # Grid configuration
+    grid = (
+        batch_size,
+        (in_channels + CHANNELS_PER_BLOCK - 1) // CHANNELS_PER_BLOCK,
+        output_h
+    )
+    
+    # Launch kernel
+    depthwise_conv2d_kernel[grid](
+        input_tensor,
+        weight,
+        output,
+        batch_size,
+        in_channels,
+        height,
+        width,
+        kernel_h,
+        kernel_w,
+        stride,
+        stride,
+        padding,
+        padding,
+        dilation,
+        dilation,
+        output_h,
+        output_w,
+        BLOCK_SIZE=BLOCK_SIZE,
+        CHANNELS_PER_BLOCK=CHANNELS_PER_BLOCK
+    )
+    
+    if bias is not None:
+        output += bias.view(1, -1, 1, 1)
+    
+    return output
+
+def triton_pointwise_conv2d(input_tensor, weight, bias=None):
+    batch_size, in_channels, height, width = input_tensor.shape
+    out_channels = weight.shape[0]
+    output_h = height
+    output_w = width
+    
+    # Allocate output tensor
+    output = torch.empty(batch_size, out_channels, output_h, output_w, device=input_tensor.device, dtype=torch.float32)
+    
+    # Configure kernel launch parameters
+    BLOCK_SIZE = 1024
+    
+    # Grid configuration
+    grid = (
+        batch_size,
+        out_channels,
+        output_h
+    )
+    
+    # Launch kernel
+    pointwise_conv2d_kernel[grid](
+        input_tensor,
+        weight,
+        output,
+        batch_size,
+        in_channels,
+        out_channels,
+        height,
+        width,
+        output_h,
+        output_w,
+        BLOCK_SIZE=BLOCK_SIZE
+    )
+    
+    if bias is not None:
+        output += bias.view(1, -1, 1, 1)
+    
+    return output
+
+class ModelNew(nn.Module):
+    """
+    Performs a depthwise-separable 2D convolution operation using Triton kernels for optimization.
+    
+    Args:
+        in_channels (int): Number of channels in the input tensor.
+        out_channels (int): Number of channels produced by the convolution.
+        kernel_size (int): Size of the convolution kernel.
+        stride (int, optional): Stride of the convolution. Defaults to 1.
+        padding (int, optional): Padding applied to the input. Defaults to 0.
+        dilation (int, optional): Spacing between kernel elements. Defaults to 1.
+        bias (bool, optional): If `True`, adds a learnable bias to the output. Defaults to `False`.
+    """
+    def __init__(self, in_channels: int, out_channels: int, kernel_size: int, stride: int = 1, padding: int = 0, dilation: int = 1, bias: bool = False):
+        super(ModelNew, self).__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.kernel_size = kernel_size
+        self.stride = stride
+        self.padding = padding
+        self.dilation = dilation
+        self.bias = bias
+        
+        # Create depthwise convolution weights
+        self.depthwise_weight = nn.Parameter(torch.randn(in_channels, 1, kernel_size, kernel_size))
+        if bias:
+            self.depthwise_bias = nn.Parameter(torch.randn(in_channels))
+        else:
+            self.register_parameter('depthwise_bias', None)
+        
+        # Create pointwise convolution weights
+        self.pointwise_weight = nn.Parameter(torch.randn(out_channels, in_channels, 1, 1))
+        if bias:
+            self.pointwise_bias = nn.Parameter(torch.randn(out_channels))
+        else:
+            self.register_parameter('pointwise_bias', None)
+        
+        # Initialize weights
+        nn.init.kaiming_uniform_(self.depthwise_weight, a=math.sqrt(5))
+        nn.init.kaiming_uniform_(self.pointwise_weight, a=math.sqrt(5))
+        if self.depthwise_bias is not None:
+            fan_in, _ = nn.init._calculate_fan_in_and_fan_out(self.depthwise_weight)
+            bound = 1 / math.sqrt(fan_in)
+            nn.init.uniform_(self.depthwise_bias, -bound, bound)
+        if self.pointwise_bias is not None:
+            fan_in, _ = nn.init._calculate_fan_in_and_fan_out(self.pointwise_weight)
+            bound = 1 / math.sqrt(fan_in)
+            nn.init.uniform_(self.pointwise_bias, -bound, bound)
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Performs the depthwise-separable 2D convolution using Triton kernels.
+
+        Args:
+            x (torch.Tensor): Input tensor of shape (batch_size, in_channels, height, width).
+
+        Returns:
+            torch.Tensor: Output tensor of shape (batch_size, out_channels, height_out, width_out).
+        """
+        # Apply depthwise convolution using Triton kernel
+        x = triton_depthwise_conv2d(
+            x, 
+            self.depthwise_weight, 
+            self.depthwise_bias,
+            stride=self.stride,
+            padding=self.padding,
+            dilation=self.dilation
+        )
+        
+        # Apply pointwise convolution using Triton kernel
+        x = triton_pointwise_conv2d(
+            x,
+            self.pointwise_weight,
+            self.pointwise_bias
+        )
+        
+        return x

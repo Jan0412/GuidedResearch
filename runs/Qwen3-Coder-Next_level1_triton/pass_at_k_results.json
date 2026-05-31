@@ -1,0 +1,514 @@
+{
+  "averages": {
+    "avg_pass@1": 0.06933333333333332
+  },
+  "metadata": {
+    "total_problems": 100,
+    "problems_with_samples": 100,
+    "total_evaluated_samples": 993,
+    "total_correct_samples": 67,
+    "pass@1_count": 100
+  },
+  "problems": {
+    "1": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "2": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "3": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "4": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "5": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "6": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "7": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "8": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "9": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "10": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "11": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "12": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "13": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "14": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "15": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "16": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "17": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "18": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "19": {
+      "total_samples": 10,
+      "correct_samples": 10,
+      "pass@1": 1.0
+    },
+    "20": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "21": {
+      "total_samples": 10,
+      "correct_samples": 7,
+      "pass@1": 0.7
+    },
+    "22": {
+      "total_samples": 3,
+      "correct_samples": 1,
+      "pass@1": 0.33333333333333326
+    },
+    "23": {
+      "total_samples": 10,
+      "correct_samples": 1,
+      "pass@1": 0.09999999999999998
+    },
+    "24": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "25": {
+      "total_samples": 10,
+      "correct_samples": 9,
+      "pass@1": 0.9
+    },
+    "26": {
+      "total_samples": 10,
+      "correct_samples": 1,
+      "pass@1": 0.09999999999999998
+    },
+    "27": {
+      "total_samples": 10,
+      "correct_samples": 7,
+      "pass@1": 0.7
+    },
+    "28": {
+      "total_samples": 10,
+      "correct_samples": 8,
+      "pass@1": 0.7999999999999999
+    },
+    "29": {
+      "total_samples": 10,
+      "correct_samples": 6,
+      "pass@1": 0.5999999999999999
+    },
+    "30": {
+      "total_samples": 10,
+      "correct_samples": 10,
+      "pass@1": 1.0
+    },
+    "31": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "32": {
+      "total_samples": 10,
+      "correct_samples": 5,
+      "pass@1": 0.5
+    },
+    "33": {
+      "total_samples": 10,
+      "correct_samples": 1,
+      "pass@1": 0.09999999999999998
+    },
+    "34": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "35": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "36": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "37": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "38": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "39": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "40": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "41": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "42": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "43": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "44": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "45": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "46": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "47": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "48": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "49": {
+      "total_samples": 10,
+      "correct_samples": 1,
+      "pass@1": 0.09999999999999998
+    },
+    "50": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "51": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "52": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "53": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "54": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "55": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "56": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "57": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "58": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "59": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "60": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "61": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "62": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "63": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "64": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "65": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "66": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "67": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "68": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "69": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "70": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "71": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "72": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "73": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "74": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "75": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "76": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "77": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "78": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "79": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "80": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "81": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "82": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "83": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "84": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "85": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "86": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "87": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "88": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "89": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "90": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "91": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "92": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "93": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "94": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "95": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "96": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "97": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "98": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "99": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    },
+    "100": {
+      "total_samples": 10,
+      "correct_samples": 0,
+      "pass@1": 0.0
+    }
+  }
+}
