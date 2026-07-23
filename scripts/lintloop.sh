@@ -6,8 +6,12 @@
 #SBATCH --account=aisc
 #SBATCH --qos=aisc
 #SBATCH --nodes=1
-#SBATCH --nodelist=gx13v1
 #SBATCH --gres=gpu:h100:1
+#
+# No --nodelist. The pin to gx13v1 reached 4 of the ~60 H100s on aisc-batch (gx[07-12,14]
+# are 8x H100 each) and made every run queue behind whatever held that one node. Nothing
+# here needs a specific node. Pass one on the command line if you ever do:
+#     sbatch --nodelist=gx13v1 scripts/lintloop.sh 1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=128G
